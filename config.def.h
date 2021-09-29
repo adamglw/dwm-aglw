@@ -152,7 +152,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
-    { MODKEY,            			XK_y,  	   togglescratch,  {.ui = 0 } },
+    { MODKEY,            			XK_grave,  togglescratch,  {.ui = 0 } },
 	{ MODKEY,            			XK_u,	   togglescratch,  {.ui = 1 } },
 	{ MODKEY,            			XK_x,	   togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
