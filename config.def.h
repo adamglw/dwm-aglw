@@ -3,10 +3,10 @@
 /* appearance */
 static unsigned int borderpx          = 1;        /* border pixel of windows */
 static unsigned int snap              = 32;       /* snap pixel */
-static const unsigned int gappih      = 10;       /* horiz inner gap between windows */
-static const unsigned int gappiv      = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh      = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov      = 15;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappih      = 5;       /* horiz inner gap between windows */
+static const unsigned int gappiv      = 5;       /* vert inner gap between windows */
+static const unsigned int gappoh      = 5;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov      = 5;       /* vert outer gap between windows and screen edge */
 static       int smartgaps            = 0;        /* 1 means no outer gap when there is only one window */
 static int showbar                    = 1;        /* 0 means no bar */
 static int topbar                     = 1;        /* 0 means bottom bar */
@@ -35,7 +35,7 @@ typedef struct {
 	const char *name;
 	const void *cmd;
 } Sp;
-const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x46", NULL };
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "120x36", NULL };
 const char *spcmd2[] = {"st", "-n", "spfm", "-g", "144x41", "-e", "ranger", NULL };
 const char *spcmd3[] = {"keepassxc", NULL };
 static Sp scratchpads[] = {
@@ -54,8 +54,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      	     instance     title      tags mask     isfloating   CenterThisWindow?    monitor */
-	{  NULL,             NULL,        "st",      0,            0,           1,	                 1 },
-	{  NULL,             NULL,        "Firefox", 0,            0,     	    1,	                 1 },
+	{  NULL,             NULL,        "st",      0,            0,           0,	                 1 },
+	{  NULL,             NULL,        "Firefox", 0,            0,     	    0,	                 1 },
 	{  NULL,             "spterm",    NULL,      SPTAG(0),     1,           0,                  -1 },
 	{  NULL,             "spfm",      NULL,      SPTAG(1),     1,           0,                  -1 },
 	{  NULL,             "keepassxc", NULL,      SPTAG(2),     0,           0,                  -1 },
