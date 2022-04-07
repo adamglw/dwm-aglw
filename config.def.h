@@ -1,4 +1,4 @@
-/* See LICENSE file for copyright and license details. */
+ /* See LICENSE file for copyright and license details. */
 
 /* appearance */
 static unsigned int borderpx          = 1;        /* border pixel of windows */
@@ -7,7 +7,7 @@ static const unsigned int gappih      = 5;       /* horiz inner gap between wind
 static const unsigned int gappiv      = 5;       /* vert inner gap between windows */
 static const unsigned int gappoh      = 5;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov      = 5;       /* vert outer gap between windows and screen edge */
-static       int smartgaps            = 0;        /* 1 means no outer gap when there is only one window */
+static int smartgaps                  = 0;        /* 1 means no outer gap when there is only one window */
 static int showbar                    = 1;        /* 0 means no bar */
 static int topbar                     = 1;        /* 0 means bottom bar */
 static char font[]                    = { "Ubuntu Nerd Font:weight=bold:pixelsize=15:antialias=true:hinting=true" };
@@ -55,7 +55,7 @@ static const Rule rules[] = {
 	 */
 	/* class      	     instance     title      tags mask     isfloating   CenterThisWindow?    monitor */
 	{  NULL,             NULL,        "st",      0,            0,           0,	                 1 },
-	{  NULL,             NULL,        "Firefox", 0,            0,     	    0,	                 1 },
+	{  NULL,             NULL,        "Firefox", 0,            0,           0,	                 1 },
 	{  NULL,             "spterm",    NULL,      SPTAG(0),     1,           0,                  -1 },
 	{  NULL,             "spfm",      NULL,      SPTAG(1),     1,           0,                  -1 },
 	{  NULL,             "keepassxc", NULL,      SPTAG(2),     0,           0,                  -1 },
@@ -89,8 +89,16 @@ static const Layout layouts[] = {
 	{ NULL,       NULL },
 };
 
+/* volume controls */
+#include <X11/XF86keysym.h>
+
+static const char *upvol[]   = { "amixer", "set", "Master", "5%+",    NULL };
+static const char *downvol[] = { "amixer", "set", "Master", "5%-",    NULL };
+static const char *mutevol[] = { "amixer", "set", "Master", "toggle", NULL };
+
+
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -118,7 +126,7 @@ ResourcePref resources[] = {
 		{ "selbordercolor",     STRING,  &selbordercolor },
 		{ "selfgcolor",         STRING,  &selfgcolor },
 		{ "borderpx",          	INTEGER, &borderpx },
-		{ "snap",          		INTEGER, &snap },
+		{ "snap",         	INTEGER, &snap },
 		{ "showbar",          	INTEGER, &showbar },
 		{ "topbar",          	INTEGER, &topbar },
 		{ "nmaster",          	INTEGER, &nmaster },
@@ -128,46 +136,52 @@ ResourcePref resources[] = {
 
 
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ NULL,                         XK_Print,  spawn,          SHCMD("flameshot gui") },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY|ShiftMask,             XK_j,      rotatestack,    {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,      rotatestack,    {.i = -1 } },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
-	{ MODKEY,                       XK_minus,  incrgaps,       {.i = +10 } },
-	{ MODKEY,                       XK_equal,  incrgaps,       {.i = -10 } },
-	{ MODKEY|ShiftMask,             XK_0,      togglegaps,     {0} },
-	{ MODKEY,                       XK_0,      defaultgaps,    {0} }, 
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_d,      setlayout,      {.v = &layouts[4]} },
-	{ MODKEY,                       XK_g,      setlayout,      {.v = &layouts[7]} },
-	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[11]} },
-	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[12]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
-    { MODKEY,            			XK_grave,  togglescratch,  {.ui = 0 } },
-//	{ MODKEY,            			XK_u,	   togglescratch,  {.ui = 1 } },
-	{ MODKEY,            			XK_e,	   togglescratch,  {.ui = 2 } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {0} },
+	/* modifier        	key             function        argument */
+	{ MODKEY|ShiftMask,     XK_p,           spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,     XK_Return,      spawn,          {.v = termcmd } },
+	{ NULL,                 XK_Print,       spawn,          SHCMD("flameshot gui") },
+	{ MODKEY,               XK_b,           togglebar,      {0} },
+	{ MODKEY|ShiftMask,     XK_j,           rotatestack,    {.i = +1 } },
+	{ MODKEY|ShiftMask,     XK_k,           rotatestack,    {.i = -1 } },
+	{ MODKEY,               XK_j,           focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_k,           focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_h,           setmfact,       {.f = -0.05} },
+	{ MODKEY,               XK_l,           setmfact,       {.f = +0.05} },
+	{ MODKEY,               XK_Return,      zoom,           {0} },
+	{ MODKEY,               XK_minus,       incrgaps,       {.i = +10 } },
+	{ MODKEY,               XK_equal,       incrgaps,       {.i = -10 } },
+	{ MODKEY|ShiftMask,     XK_0,           togglegaps,     {0} },
+	{ MODKEY,               XK_0,           defaultgaps,    {0} }, 
+	{ MODKEY,               XK_Tab,         view,           {0} },
+	{ MODKEY|ShiftMask,     XK_c,           killclient,     {0} },
+        { 0,                    XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
+        { 0,                    XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+	{ 0,                    XF86XK_AudioMute, spawn,        {.v = mutevol } },
+	{ MODKEY,               XK_F12,         spawn,          {.v = upvol   } },
+	{ MODKEY,               XK_F11,         spawn,          {.v = downvol } },
+	{ MODKEY,               XK_F9,          spawn,          {.v = mutevol } },
+	{ MODKEY,               XK_t,           setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,               XK_m,           setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,               XK_d,           setlayout,      {.v = &layouts[4]} },
+	{ MODKEY,               XK_g,           setlayout,      {.v = &layouts[7]} },
+	{ MODKEY,               XK_u,           setlayout,      {.v = &layouts[11]} },
+	{ MODKEY,               XK_o,           setlayout,      {.v = &layouts[12]} },
+	{ MODKEY,               XK_space,       setlayout,      {0} },
+	{ MODKEY|ShiftMask,     XK_space,       togglefloating, {0} },
+	{ MODKEY|ShiftMask,     XK_f,           togglefullscr,  {0} },
+    { MODKEY,               XK_grave,       togglescratch,  {.ui = 0 } },
+//	{ MODKEY,               XK_u,           togglescratch,  {.ui = 1 } },
+	{ MODKEY,               XK_e,           togglescratch,  {.ui = 2 } },
+	TAGKEYS(                XK_1,                           0)
+	TAGKEYS(                XK_2,                           1)
+	TAGKEYS(                XK_3,                           2)
+	TAGKEYS(                XK_4,                           3)
+	TAGKEYS(                XK_5,                           4)
+	TAGKEYS(                XK_6,                           5)
+	TAGKEYS(                XK_7,                           6)
+	TAGKEYS(                XK_8,                           7)
+	TAGKEYS(                XK_9,                           8)
+	{ MODKEY|ControlMask|ShiftMask, XK_q,   quit,           {0} },
 };
 
 /* button definitions */
